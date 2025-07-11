@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Racing Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="ui-overlay">
+            <div class="timer-display">
+                <div class="current-time">Time: <span id="currentTime">0.00</span>s</div>
+                <div class="best-time">Best: <span id="bestTime">--:--</span></div>
+                <div class="lap-counter">Lap: <span id="lapCount">0</span></div>
+            </div>
+            <div class="controls-info">
+                <div class="desktop-controls">Arrow Keys or WASD to drive</div>
+                <div class="mobile-controls">Touch controls below</div>
+            </div>
+        </div>
+        
+        <canvas id="gameCanvas"></canvas>
+        
+        <div class="touch-controls">
+            <div class="steering-area">
+                <div class="steering-wheel" id="steeringWheel">
+                    <div class="steering-center"></div>
+                </div>
+            </div>
+            <div class="pedal-area">
+                <button class="pedal gas-pedal" id="gasPedal">⬆</button>
+                <button class="pedal brake-pedal" id="brakePedal">⬇</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>

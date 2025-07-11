@@ -1,0 +1,223 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #1a1a1a;
+    color: white;
+    overflow: hidden;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.ui-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    padding: 20px;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+    pointer-events: none;
+}
+
+.timer-display {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.timer-display div {
+    background: rgba(0,0,0,0.8);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.current-time {
+    color: #00ff00;
+}
+
+.best-time {
+    color: #ffff00;
+}
+
+.lap-counter {
+    color: #00bfff;
+}
+
+.controls-info {
+    text-align: center;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.desktop-controls {
+    display: block;
+}
+
+.mobile-controls {
+    display: none;
+}
+
+#gameCanvas {
+    flex: 1;
+    background: #0d4d0d; /* Even darker green for maximum contrast */
+    display: block;
+    touch-action: none;
+}
+
+.touch-controls {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 150px;
+    background: rgba(0,0,0,0.8);
+    padding: 20px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.steering-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.steering-wheel {
+    width: 100px;
+    height: 100px;
+    border: 3px solid #666;
+    border-radius: 50%;
+    position: relative;
+    background: rgba(255,255,255,0.1);
+    cursor: pointer;
+    touch-action: none;
+}
+
+.steering-center {
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.1s ease;
+}
+
+.pedal-area {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pedal {
+    width: 60px;
+    height: 40px;
+    border: none;
+    border-radius: 8px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    touch-action: manipulation;
+    user-select: none;
+}
+
+.gas-pedal {
+    background: #00ff00;
+    color: #000;
+}
+
+.gas-pedal:active {
+    background: #00cc00;
+}
+
+.brake-pedal {
+    background: #ff0000;
+    color: #fff;
+}
+
+.brake-pedal:active {
+    background: #cc0000;
+}
+
+/* Mobile/Touch Device Styles */
+@media (max-width: 768px) {
+    .desktop-controls {
+        display: none;
+    }
+    
+    .mobile-controls {
+        display: block;
+    }
+    
+    .touch-controls {
+        display: flex;
+    }
+    
+    .ui-overlay {
+        padding: 15px;
+    }
+    
+    .timer-display {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .timer-display div {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+}
+
+/* iOS Safari specific styles */
+@media (max-width: 768px) {
+    body {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    .game-container {
+        height: 100vh;
+        height: -webkit-fill-available;
+    }
+}
+
+/* Prevent zoom on double tap */
+button, .steering-wheel {
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    #gameCanvas {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+}

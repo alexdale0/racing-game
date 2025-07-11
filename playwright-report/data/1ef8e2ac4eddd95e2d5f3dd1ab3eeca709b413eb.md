@@ -1,0 +1,11 @@
+# Page snapshot
+
+```yaml
+- text: "Time: 0.00s Best: --:-- Lap: 0 Arrow Keys or WASD to drive"
+- link "Debug Mode":
+  - /url: "?debug"
+- text: "|"
+- link "Run Tests":
+  - /url: test.html
+- text: Press any key or steer to start
+```

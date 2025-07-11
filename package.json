@@ -1,0 +1,19 @@
+{
+  "name": "racing-game",
+  "version": "1.0.0",
+  "description": "A browser-based racing game with physics and lap timing",
+  "main": "index.html",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:ui": "playwright test --ui",
+    "install-browsers": "playwright install"
+  },
+  "keywords": ["game", "racing", "canvas", "javascript"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0"
+  }
+}
