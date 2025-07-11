@@ -4,3 +4,4 @@ tests/helpers.js
 test.html
 tests/screenshots/
 test-results/
+playwright-report/

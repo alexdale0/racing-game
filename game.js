@@ -1,19 +1,20 @@
 class RacingGame {
     showStartPrompt() {
         if (document.getElementById('startPromptOverlay')) return;
+        const canvas = document.getElementById('gameCanvas');
         const overlay = document.createElement('div');
         overlay.id = 'startPromptOverlay';
         overlay.style.cssText = `
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            pointer-events: none;
-            z-index: 999;
+            pointer-events: auto;
+            z-index: 20;
         `;
         const msg = document.createElement('div');
         msg.style.cssText = `
@@ -29,13 +30,24 @@ class RacingGame {
             opacity: 0.92;
             animation: fadeInOut 2.5s infinite alternate;
         `;
-        msg.innerHTML = 'Press any key or steer to start';
+        msg.innerHTML = 'Press any key, tap, or steer to start';
         overlay.appendChild(msg);
-        document.body.appendChild(overlay);
+        // Insert overlay as sibling above canvas
+        canvas.parentElement.insertBefore(overlay, canvas.nextSibling);
         // Add fade animation
         const style = document.createElement('style');
         style.innerHTML = `@keyframes fadeInOut { from { opacity: 0.5; } to { opacity: 1; } }`;
         document.head.appendChild(style);
+
+        // Dismiss overlay on any pointerdown or touchstart on overlay
+        const dismiss = (e) => {
+            e.preventDefault();
+            this.hideStartPrompt();
+            overlay.removeEventListener('pointerdown', dismiss);
+            overlay.removeEventListener('touchstart', dismiss);
+        };
+        overlay.addEventListener('pointerdown', dismiss);
+        overlay.addEventListener('touchstart', dismiss);
     }
 
     hideStartPrompt() {
@@ -238,6 +250,43 @@ class RacingGame {
         const gasPedal = document.getElementById('gasPedal');
         const brakePedal = document.getElementById('brakePedal');
         const steeringWheel = document.getElementById('steeringWheel');
+        const leftSteerBtn = document.getElementById('leftSteerBtn');
+        const rightSteerBtn = document.getElementById('rightSteerBtn');
+        // Left steer button
+        leftSteerBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            this.touchControls.steering = -1;
+            if (!this.raceStarted) {
+                this.startRace();
+                this.hideStartPrompt();
+            }
+        });
+        leftSteerBtn.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            this.touchControls.steering = 0;
+        });
+        leftSteerBtn.addEventListener('touchcancel', (e) => {
+            e.preventDefault();
+            this.touchControls.steering = 0;
+        });
+
+        // Right steer button
+        rightSteerBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            this.touchControls.steering = 1;
+            if (!this.raceStarted) {
+                this.startRace();
+                this.hideStartPrompt();
+            }
+        });
+        rightSteerBtn.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            this.touchControls.steering = 0;
+        });
+        rightSteerBtn.addEventListener('touchcancel', (e) => {
+            e.preventDefault();
+            this.touchControls.steering = 0;
+        });
         
         // Gas pedal
         gasPedal.addEventListener('touchstart', (e) => {
