@@ -247,118 +247,46 @@ class RacingGame {
     }
     
     setupTouchControls() {
-        const gasPedal = document.getElementById('gasPedal');
-        const brakePedal = document.getElementById('brakePedal');
-        const steeringWheel = document.getElementById('steeringWheel');
-        const leftSteerBtn = document.getElementById('leftSteerBtn');
-        const rightSteerBtn = document.getElementById('rightSteerBtn');
-        // Left steer button
-        leftSteerBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            this.touchControls.steering = -1;
-            if (!this.raceStarted) {
-                this.startRace();
-                this.hideStartPrompt();
-            }
-        });
-        leftSteerBtn.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            this.touchControls.steering = 0;
-        });
-        leftSteerBtn.addEventListener('touchcancel', (e) => {
-            e.preventDefault();
-            this.touchControls.steering = 0;
-        });
-
-        // Right steer button
-        rightSteerBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            this.touchControls.steering = 1;
-            if (!this.raceStarted) {
-                this.startRace();
-                this.hideStartPrompt();
-            }
-        });
-        rightSteerBtn.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            this.touchControls.steering = 0;
-        });
-        rightSteerBtn.addEventListener('touchcancel', (e) => {
-            e.preventDefault();
-            this.touchControls.steering = 0;
-        });
-        
-        // Gas pedal
-        gasPedal.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            this.touchControls.gas = true;
-            if (!this.raceStarted) {
-                this.startRace();
-                this.hideStartPrompt();
-            }
-        });
-        
-        gasPedal.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            this.touchControls.gas = false;
-        });
-        
-        // Brake pedal
-        brakePedal.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            this.touchControls.brake = true;
-        });
-        
-        brakePedal.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            this.touchControls.brake = false;
-        });
-        
-        // Steering wheel
-        let steeringActive = false;
-        let steeringStartX = 0;
-        
-        const handleSteering = (e) => {
-            if (!steeringActive) return;
-            
-            const rect = steeringWheel.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const touchX = e.touches ? e.touches[0].clientX : e.clientX;
-            
-            const deltaX = touchX - centerX;
-            const maxDelta = rect.width / 2;
-            this.touchControls.steering = Math.max(-1, Math.min(1, deltaX / maxDelta));
-            
-            // Visual feedback
-            const steeringCenter = steeringWheel.querySelector('.steering-center');
-            steeringCenter.style.transform = `translate(${-50 + this.touchControls.steering * 30}%, -50%)`;
-        };
-        
-        steeringWheel.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            steeringActive = true;
-            steeringStartX = e.touches[0].clientX;
-            handleSteering(e);
-            if (!this.raceStarted) {
-                this.startRace();
-                this.hideStartPrompt();
-            }
-        });
-        
-        steeringWheel.addEventListener('touchmove', (e) => {
-            e.preventDefault();
-            handleSteering(e);
-        });
-        
-        steeringWheel.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            steeringActive = false;
-            this.touchControls.steering = 0;
-            
-            // Reset visual feedback
-            const steeringCenter = steeringWheel.querySelector('.steering-center');
-            steeringCenter.style.transform = 'translate(-50%, -50%)';
-        });
+        // Tap left/right on canvas to steer for touch devices
+        const canvas = this.canvas;
+        let steerTouchId = null;
+        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        if (isTouchDevice && canvas) {
+            // Reduce sensitivity: set steering to -0.3/0.3 for much slower turning
+            canvas.addEventListener('touchstart', (e) => {
+                if (e.touches.length > 0) {
+                    const touch = e.touches[0];
+                    const rect = canvas.getBoundingClientRect();
+                    const x = touch.clientX - rect.left;
+                    steerTouchId = touch.identifier;
+                    if (x < rect.width / 2) {
+                        this.touchControls.steering = -0.3;
+                    } else {
+                        this.touchControls.steering = 0.3;
+                    }
+                    if (!this.raceStarted) {
+                        this.startRace();
+                        this.hideStartPrompt();
+                    }
+                }
+            });
+            canvas.addEventListener('touchend', (e) => {
+                // Only reset if the same touch ends
+                if (steerTouchId !== null) {
+                    for (let i = 0; i < e.changedTouches.length; i++) {
+                        if (e.changedTouches[i].identifier === steerTouchId) {
+                            this.touchControls.steering = 0;
+                            steerTouchId = null;
+                            break;
+                        }
+                    }
+                }
+            });
+            canvas.addEventListener('touchcancel', (e) => {
+                this.touchControls.steering = 0;
+                steerTouchId = null;
+            });
+        }
     }
     
     startRace() {
@@ -927,9 +855,13 @@ class RacingGame {
 
 // Initialize the game when the page loads
 document.addEventListener('DOMContentLoaded', () => {
+    // Remove the touch-controls overlay if present
+    const touchControls = document.getElementById('touch-controls');
+    if (touchControls) touchControls.remove();
+
+    // ...existing code...
     const game = new RacingGame();
     window.racingGame = game; // Expose globally for debugging
-    
     // Add debugging info
     console.log('Game initialized');
     console.log('Car start position:', game.car.x, game.car.y);
