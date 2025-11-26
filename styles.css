@@ -271,6 +271,51 @@ body {
     height: 100%;
 }
 
+/* Mobile Touch Zone Indicators */
+.touch-zone {
+    display: none;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 80px;
+    height: 150px;
+    background: rgba(255,255,255,0.08);
+    border: 2px dashed rgba(255,255,255,0.3);
+    border-radius: 15px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 5;
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+.left-zone {
+    left: 15px;
+    border-left: 4px solid rgba(0,191,255,0.6);
+}
+
+.right-zone {
+    right: 15px;
+    border-right: 4px solid rgba(0,191,255,0.6);
+}
+
+.touch-arrow {
+    font-size: 36px;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 8px;
+    text-shadow: 0 0 10px rgba(0,191,255,0.5);
+}
+
+.touch-label {
+    font-size: 8px;
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    letter-spacing: 1px;
+    line-height: 1.3;
+    padding: 0 5px;
+}
+
 /* Mobile/Touch Device Styles */
 @media (max-width: 768px) {
     .desktop-controls {
@@ -279,6 +324,10 @@ body {
     
     .mobile-controls {
         display: block;
+    }
+    
+    .touch-zone {
+        display: flex;
     }
     
     .touch-controls {
